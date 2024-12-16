@@ -9,7 +9,7 @@ try
 	[self.FeatureTimestamps, self.Features] = MClust.CalculateFeatures(featuresToCalc);
 	OK = true;
 catch ME
-	disp('Failed to fill (calculate) features.'); ME
+	disp('Failed to fill (calculate) features.'); 
 	self.TTfn = ''; % unload data
 	OK = false;
 end

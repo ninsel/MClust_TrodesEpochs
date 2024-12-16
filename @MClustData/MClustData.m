@@ -5,6 +5,8 @@ classdef MClustData < handle
     %
     % contains data used in MClust that does change on a tetrode to tetrode
     % cycle
+    %
+    % nei 12/24 -- switched TText from ntt to dat
     
     
     properties(Constant)
@@ -18,7 +20,7 @@ classdef MClustData < handle
         TTfn = '';       % file name for tt file
         TTdn = '';      % directory name for tt file
         FDdn = '';        % directory name for fd file
-        TText = '.ntt';
+        TText = '.dat';
         FDext = '.fd';
         
         % -- data
