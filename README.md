@@ -1,4 +1,9 @@
-# MClust-Spike-Sorting-Toolbox
+# MClust_TrodesEpochs
 MClust is a Matlab-based spike sorting toolbox for the separation of putative cells from multi-site neurophysiological recordings.  It is particularly good for tetrodes.
 
-This initial version is started from Version 4.4.07 released on 03 October 2017 from A. David Redish from the RedishLab at the University of Minnesota.  Prior versions and prior additional components can be found at the following website: http://redishlab.neuroscience.umn.edu/MClust/MClust.html.
+Forked from v4.4.07 12/2024
+
+This version is meant for in-house use on Trodes data where epochs are recorded separately and spike data is extracted into separate subfolders (e.g., rest1, behavior, rest2)
+
+The main changes are the tetrode Loading Function along with some minor edits to RunClustBatch (now RunClustBatch_epoch) and a few interface operations that allow the FD file folders to use a different name from the individual spike data (.dat) files. 
+
