@@ -3,6 +3,7 @@ classdef MClustMainWindowClass < handle
     %
     %
     % ADR 2012/12
+    % note change to line 178
     
     properties(Constant)
         AboutString = {[MClustSettings.VERSION], 'By AD Redish', ' ', ...
@@ -185,7 +186,7 @@ classdef MClustMainWindowClass < handle
         function LoadTetrodeData(self,~,~)
             MCD = MClust.GetData();
             MCS = MClust.GetSettings();
-            MCD.LoadTetrodeData(MCS.UseFileDialog);
+            MCD.LoadTetrodeData_epoch(MCS.UseFileDialog);
             self.Redraw()
         end
         
