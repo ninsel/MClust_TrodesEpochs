@@ -15,7 +15,10 @@ for iC = 1:nClust
         CluSep.IsolationDistance = MCD.Clusters{iC}.CalculateIsolationDistance();
         %CluSep.SNR = MCD.Clusters{iC}.CalculateSNR();
     
-        fnCQ = [MCD.TfileBaseName(iC) '-CluQual.mat'];
+              [folderbase, ntnum, tnum] = fileparts(MCD.TfileBaseName(iC));
+             savefolder = fileparts(folderbase);
+
+        fnCQ = [savefolder ntnum tnum '-CluQual.mat'];
         
         CluSep.Features = MCS.ClusterSeparationFeatures;
         CluSep.ChannelValidity = MCS.ChannelValidity;

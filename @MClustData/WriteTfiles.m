@@ -1,11 +1,15 @@
 function OK = WriteTfiles(self)
 
 % Write T files (MClustData)
+%	-modified by nei to save the cluster summary figures
 
 % ADR 2014-12-17
 % now calls EraseTfiles to erase T files (so includes WV and CQ as well)
 % now asks if want to erase if save with no clusters and there are previous
 % .t or ._t files.
+
+% NEI 2017-6-22 
+% now also saves the cluster summary sheets
 
 MCS = MClust.GetSettings();
 MCD = self;
@@ -64,49 +68,55 @@ for iC = 1:nClust
        
       tSpikes = MCD.FeatureTimestamps(spikes);
       
+      [folderbase, ntnum, tnum] = fileparts(MCD.TfileBaseName(iC));
+      savefolder = fileparts(folderbase);
+
       if ismember(iC, underscoreTclusters)
-          fn = [MCD.TfileBaseName(iC) '._' MCS.tEXT];
+          fn = [savefolder ntnum tnum '._' MCS.tEXT];
       else
-          fn = [MCD.TfileBaseName(iC) '.' MCS.tEXT];
+          fn = [savefolder ntnum tnum '.' MCS.tEXT];
       end            
       
       fp = fopen(fn, 'wb', 'b');
       if (fp == -1)
          errordlg(['Could not open file"' fn '".']);
       end
-
-      switch MCS.tEXT
-          case 'raw64'
-              tSpikes = uint64(tSpikes); % 
-              strunit = '(same as input)';
-              strformat = 'uint64';              
-          case 't64'
-              tSpikes = uint64(tSpikes*10000); % converts to 0.1 ms, but saves as 64bit 
-              strunit = '(tenths of msecs)';
-              strformat = 'uint64';
-          case 'raw32'
-              tSpikes = uint32(tSpikes); % 
-              strunit = '(same as input)';
-              strformat = 'uint32';                           
-          case 't32'
-              tSpikes = uint32(tSpikes*10000); % NEED TO CONVERT TO NEURALYNX's .t format save in integers of 0.1ms
-              strunit = '(tenths of msecs)';
-              strformat = 'uint32';
-          case 't'
-              tSpikes = uint32(tSpikes*10000); % NEED TO CONVERT TO NEURALYNX's .t format save in integers of 0.1ms
-              strunit = '(tenths of msecs)';
-              strformat = 'uint32';
-          otherwise
-              error('MClust::tEXT', 'Unknown extension for t files');
-      end
-      
       MClust.WriteHeader(fp, ...
           'T-file', ...
           'Output from MClust', ...
-          ['Time of spiking stored in timestamps ' strunit],...
-          ['as unsigned integer (big-endian): ' strformat]);
-      fwrite(fp, tSpikes, strformat);
+          'Time of spiking stored in timestamps (tenths of msecs)',...
+          'as unsigned integer: uint32');
+      switch MCS.tEXT
+          case 'raw64'
+              tSpikes = uint64(tSpikes); % 
+              fwrite(fp, tSpikes, 'uint64');              
+          case 't64'
+              tSpikes = uint64(tSpikes*10000); % converts to 0.1 ms, but saves as 64bit 
+              fwrite(fp, tSpikes, 'uint64');
+          case 'raw32'
+              tSpikes = uint32(tSpikes); % 
+              fwrite(fp, tSpikes, 'uint32');                            
+          case 't32'
+              tSpikes = uint32(tSpikes*10000); % NEED TO CONVERT TO NEURALYNX's .t format save in integers of 0.1ms
+              fwrite(fp, tSpikes, 'uint32');
+          case 't'
+              tSpikes = uint32(tSpikes*10000); % NEED TO CONVERT TO NEURALYNX's .t format save in integers of 0.1ms
+              fwrite(fp, tSpikes, 'uint32');
+          otherwise
+              error('MClust::tEXT', 'Unknown extension for t files');
+      end
+       
       fclose(fp);
    end
+   CheckCluster(MCD.Clusters{iC});
+   p_figurename = get(gcf, 'Name');
+   p_iC = num2str(iC);
+   if length(p_iC < 2)
+       p_iC = ['0' p_iC];
+   end
+   clusternum = [ntnum tnum(2:end)];
+   figurename = [MCD.TTfn '_' clusternum '_summary'];
+   saveas(gcf, figurename, 'jpeg');
+   
 end
 OK = true;
