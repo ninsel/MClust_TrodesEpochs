@@ -68,13 +68,10 @@ for iC = 1:nClust
        
       tSpikes = MCD.FeatureTimestamps(spikes);
       
-      [folderbase, ntnum, tnum] = fileparts(MCD.TfileBaseName(iC));
-      savefolder = fileparts(folderbase);
-
       if ismember(iC, underscoreTclusters)
-          fn = [savefolder ntnum tnum '._' MCS.tEXT];
+          fn = [MCD.TfileBaseName(iC) '._' MCS.tEXT];
       else
-          fn = [savefolder ntnum tnum '.' MCS.tEXT];
+          fn = [MCD.TfileBaseName(iC) '.' MCS.tEXT];
       end            
       
       fp = fopen(fn, 'wb', 'b');
@@ -114,8 +111,8 @@ for iC = 1:nClust
    if length(p_iC < 2)
        p_iC = ['0' p_iC];
    end
-   clusternum = [ntnum tnum(2:end)];
-   figurename = [MCD.TTfn '_' clusternum '_summary'];
+   clusternum = MCD.TfileBaseName(iC);
+   figurename = [MCD.TTfn '_' clusternum(end-1:end) '_summary'];
    saveas(gcf, figurename, 'jpeg');
    
 end
